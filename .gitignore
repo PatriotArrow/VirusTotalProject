@@ -3,3 +3,4 @@
 .venv
 __pycache__/
 json_files
+hashes.txt
