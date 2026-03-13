@@ -2,12 +2,14 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
+import sys
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 hashes = open("hash.txt").read().splitlines()
 # print(hashes)
+
 
 #session init
 session = requests.Session()
@@ -16,17 +18,25 @@ session.headers = {'X-Apikey': API_KEY}
 
 # url = "https://www.virustotal.com/api/v3/monitor_partner/hashes/05dc7b24be0359720c2ac68c53966378063e51d23251cb9993be37300b195265/items"
 # url = f"https://www.virustotal.com/api/v3/files/{hash}"
+# response = session.get(url)
+# print(response, response.status_code)
+# sys.exit()
 
+for num,hash in enumerate(hashes):
 
-for hash in hashes:
+    # print(hash)
+    # 
 
-    url = "https://www.virustotal.com/api/v3/files/{hash}"
+    url = f"https://www.virustotal.com/api/v3/files/{hash}"
     response = session.get(url)
+    
     if response.status_code == 200:
+        print(f"{num}, {hash}.json saved ") #change phrasing ?
         print(response.json())
         with open(f'json_files/{hash}.json', 'w', encoding='utf-8') as f:
             json.dump(response.json(), f, indent=4)
-
+    elif response.status_code == 404:
+        print(f"{num}, hash not found : {hash}  ")
 
     
 
